@@ -3,7 +3,7 @@ INCLUDE=
 LIBS=
 
 
-CFLAGS= -Wall $(INCLUDE) -O3 -funroll-loops -w  -DLINUX 
+CFLAGS= -Wall -m32 $(INCLUDE) -O3 -funroll-loops -w  -DLINUX 
 
 all: graspforth
 
