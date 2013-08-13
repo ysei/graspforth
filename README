@@ -39,7 +39,8 @@ Fast:
 	By necessity I have used ITC (Indirect Threaded Code), as there is no 
 	way to lay down a machine "call or jump" instruction from within C to 
 	implement DTC (Direct Threaded Code) ... and ITC is inherently more 
-	portable and readable anyway, .. all high-level words are addresses only. 
+	portable and readable anyway, .. all high-level words are addresses 
+	only. 
 	The resulting code is close to DTC speed, depending on the target 
 	processor and optimizations done by the compiler (i.e what -O flag you 
 	provide etc ), and is "fast enough" (IMHO).
@@ -74,7 +75,8 @@ Portable:
 	To port to a different target processor, all that is required is the 
 	modification of one simple header file supplying the memory map, 
 	putchar(), getchar() and initIO() functions, and specifying the 
-	ENDIAN'ess of the machine, also whether \n or \r is used for the carriage 
+	ENDIAN'ess of the machine, also whether \n or \r is used for the 
+	carriage 
 	return. 
 	Then using the GCC cross-compiler tools for the target processor,
 	simply re-compile, download and run ... 5 minutes work.
