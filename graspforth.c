@@ -30,8 +30,8 @@
 
 // --------------------------------- Includes --------------------------------
 
-#include "include/platform.h"
-#include "include/forthdef.h"
+#include "platforms/platform.h"
+#include "platforms/forthdef.h"
 
 //--------------------------------  Defines ----------------------------------
 

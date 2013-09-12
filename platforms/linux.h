@@ -9,6 +9,11 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include <stropts.h>
+#include <poll.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 
 static struct termios initial_settings, new_settings;
 static int peek_character = -1;
@@ -93,21 +98,38 @@ void close_keyboard()
 
 int keyhit()
 {
-	unsigned char ch;
-	int nread;
+    unsigned char ch;
+    int nread;
 
-    if (peek_character != -1) return 1;
-    new_settings.c_cc[VMIN]=0;
-    tcsetattr(0, TCSANOW, &new_settings);
-    nread = read(0,&ch,1);
-    new_settings.c_cc[VMIN]=1;
-    tcsetattr(0, TCSANOW, &new_settings);
-    if(nread == 1) 
+    struct pollfd fds[1];
+    unsigned int timeout = 60000; // 1 minute
+    int ret;
+
+    fds[0].fd = open("/dev/fd/0", O_RDONLY);
+    fds[0].events = POLLIN | POLLPRI;
+
+    ret = poll(fds, 1, timeout);
+
+    if (ret > 0 && (fds[0].events & POLLIN || fds[0].events & POLLPRI))
     {
-        peek_character = ch;
-        return 1;
+
+        if (peek_character != -1)
+            return 1;
+
+        new_settings.c_cc[VMIN]=0;
+        tcsetattr(0, TCSANOW, &new_settings);
+        nread = read(0,&ch,1);
+        new_settings.c_cc[VMIN]=1;
+        tcsetattr(0, TCSANOW, &new_settings);
+    
+        if(nread == 1) 
+        {
+            peek_character = ch;
+            return 1;
+        }
+    
+        return 0;
     }
-    return 0;
 }
 
 int readch()
