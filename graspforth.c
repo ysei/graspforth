@@ -30,6 +30,9 @@
 
 // --------------------------------- Includes --------------------------------
 
+#include <signal.h>
+#include <stdlib.h>
+
 #include "platforms/platform.h"
 #include "platforms/forthdef.h"
 
@@ -177,6 +180,13 @@ void boot_rom (void)
 #endif
 }
 
+
+void signal_interrupt_handler(int signal_nb)
+{
+	exit(EXIT_SUCCESS);
+}
+
+
 // --------------------------------------- Main ------------------------------
 
 int main(void)
@@ -186,7 +196,10 @@ int main(void)
 	INT i,j;
 	HEADS *head;
 
-		// Initial values for system & user variables
+	// Handling CTRL+C to exit
+	signal(SIGINT, signal_interrupt_handler);
+
+	// Initial values for system & user variables
 	FORTHWORDS sys_var[] = {
 		_QRX,_TXSTORE,/*accept*/0,/*KTAP*/0,_TXSTORE,
 		/*DOTOK*/0,/*INTERP*/0,/*NUMBQ*/0,
